@@ -1,38 +1,37 @@
-Bun.serve({
-    port: 5000, // defaults to $BUN_PORT, $PORT, $NODE_PORT otherwise 3000
-    //hostname: "mydomain.com", // defaults to "0.0.0.0"
-    async fetch(req) {
-      return new Response(await Bun.file("index.html").text(), {
-        headers: {
-        "Content-Type": "text/html",
-      },});
-    },
-  });
+const port: int = 5500;
 
-  Bun.serve({
-    port: 5500, // defaults to $BUN_PORT, $PORT, $NODE_PORT otherwise 3000
-    //hostname: "mydomain.com", // defaults to "0.0.0.0"
+console.log(`Starting server on port ${port} (http://localhost:${port}/)`);
+
+Bun.serve({
+    port,
     async fetch(req) {
-        const url = new URL(req.url);
-        if (url.pathname === "/") 
-        return new Response(
-            await Bun.file("index.html").text(), {
-                headers: {
-                "Content-Type": "text/html",
-              },}
-        );
-        if (url.pathname === "/goals") 
-        return new Response(
-            await Bun.file("goals.html").text(), {
-            });
-        if (url.pathname === "/officers") 
-        return new Response(
-            await Bun.file("officers.html").text(), {
-            });
-        if (url.pathname === "/contact") 
-        return new Response(
-            await Bun.file("contact.html").text(), {
-            });
-        return new Response("404");
+        const url: URL = new URL(req.url);
+        let text: string | null = null;
+
+        switch (url.pathname) {
+            case "/":
+            case "/index.html":
+                text = await Bun.file("content/index.html").text();
+                break;
+
+            case "/home":
+            case "/goals":
+            case "/officers":
+            case "/contact":
+                text = await Bun.file(`content${url.pathname}.html`).text();
+                break;
+
+            default:
+                text = "<p><b>404 Error</b></p>";
+                break;
+        }
+
+        if (!text) {
+            text = "<p><b>500 Server Error</b></p>";
+        }
+
+        return new Response(text, {
+            headers: { "Content-Type": "text/html" }
+        });
     }
-  });
+});

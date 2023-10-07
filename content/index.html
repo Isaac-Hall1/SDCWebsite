@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.6" integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni" crossorigin="anonymous"></script>
+    <style>
+       /* https://htmx.org/examples/animations/#view-transitions */
+       @keyframes fade-in { from { opacity: 0; } }
+       @keyframes fade-out { to { opacity: 0; } }
+       @keyframes slide-from-top { from { transform: translateY(-25px); } }
+       @keyframes slide-to-bottom { to { transform: translateY(100px); } }
+
+       .slide-it { view-transition-name: slide-it; }
+
+       ::view-transition-old(slide-it) {
+         animation: 300ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+         600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-bottom;
+       }
+       ::view-transition-new(slide-it) {
+         animation: 180ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+         600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-top;
+       }
+    </style>
+    <title>UofU SDC</title>
+</head>
+<body class="min-h-screen flex flex-col">
+    <div class="flex content-center bg-[#BE0000] w-full text-white m-0 p-4">
+        <h1 class="text-2xl font-bold flex-grow">UofU Software Development Club</h1>
+        <nav class="flex flex-col md:flex-row items-end md:items-center md:space-x-3 select-none cursor-pointer text-md">
+            <p hx-get="/home"     hx-swap="innerHTML transition:true" hx-trigger="click" hx-target="#content">Home</p>
+            <p hx-get="/goals"    hx-swap="innerHTML transition:true" hx-trigger="click" hx-target="#content">Goals</p>
+            <p hx-get="/officers" hx-swap="innerHTML transition:true" hx-trigger="click" hx-target="#content">Officers</p>
+            <p hx-get="/contact"  hx-swap="innerHTML transition:true" hx-trigger="click" hx-target="#content">Contact</p>
+        </nav>
+    </div>
+    <div class="p-4 flex-grow">
+        <main class="slide-it" id="content" hx-get="/home" hx-trigger="load"></main>
+    </div>
+    <div class="h-24 flex justify-center items-center text-center bg-[#808080] text-[#F0F0F0] text-sm">
+        <div>
+            <p>&copy; 2023 University of Utah Software Development Club</p>
+            <p class="italic">put other things here? ¯\_(ツ)_/¯</p>
+        </div>
+    </div>
+</body>
+</html>
