@@ -1,4 +1,4 @@
-const port: int = 5500;
+const port: number = 5500;
 
 console.log(`Starting server on port ${port} (http://localhost:${port}/)`);
 
